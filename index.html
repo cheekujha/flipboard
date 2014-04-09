@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>TruJunction</title>
+<link rel="stylesheet" href="css/reset.css" />
+<link rel="stylesheet" href="css/flipboard.css" />
+<!--[if gte IE 8]>
+  <style type="text/css">
+    .gradient, footer {
+       filter: none;
+    }
+  </style>
+<![endif]-->
+
+<script type="text/javascript" src="util/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="flipboard_instance.js"></script>
+</head>
+
+<body>
+<div class="main-container">
+<div class="upper-container-news-1">upper-container-news-1</div>
+<div class="upper-container-news-2">NO-MORE-NEXT-NEWS</div>
+<div class="upper-lower-container">upper-lower-container</div>
+<div class="lower-container-news-1">lower-container-news-1</div>
+<div class="lower-container-news-2">NO-MORE-PREV-NEWS</div>
+<div class="lower-upper-container">lower-upper-container</div>
+</div>
+</body>
+<script type="text/javascript">
+
+	var newsObj = [{
+		upper:"THIS IS UPPER 0",
+		lower:"THIS IS LOWER 0"
+	},{
+		upper:"THIS IS UPPER 1",
+		lower:"THIS IS LOWER 1"
+	},
+	{
+		upper:"THIS IS UPPER 2",
+		lower:"THIS IS LOWER 2"
+	},
+	{
+		upper:"THIS IS UPPER 3",
+		lower:"THIS IS LOWER 3"
+	},
+	{
+		upper:"THIS IS UPPER 4",
+		lower:"THIS IS LOWER 4"
+	},
+	{
+		upper:"THIS IS UPPER 5",
+		lower:"THIS IS LOWER 5"
+	}];
+
+		var options = {
+		minMoveOffset : 20,
+		maxMoveOffset : 200,
+		upperSelector : '.upper-container-news-1',
+		upperSelector2 : '.upper-container-news-2',
+		lowerSelector : '.lower-container-news-1',
+		lowerSelector2 : '.lower-container-news-2',
+		upperLowerSelector : '.upper-lower-container',
+		lowerUpperSelector : '.lower-upper-container',
+		mainSelector: '.main-container',
+		displayList: newsObj,
+		initialIncilination: 5
+	};
+	
+	var fb = new FlipBoard(options);
+	// fb.insertNews("current",newsObj[1]);
+	// fb.insertNews("next",newsObj[2]);
+	// fb.insertNews("prev",newsObj[0]);
+</script>
+</html>
