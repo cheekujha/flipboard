@@ -191,13 +191,13 @@
 				self.lowerAlreadyMoving = false;
 				return;
 			}
-			alert("11");
+			//alert("11");
 			if(speed > .5 && self.hasNextNews()){
 				// alert("cc");
 				self.dropDownComplete('upper');
 				return
 			}
-			alert("12");
+			//alert("12");
 			if( dy < self.maxMoveOffset || !self.hasNextNews()) {
 				// alert("dd");
 				self.dropDown = false;
@@ -208,7 +208,7 @@
 			}
 			// alert("13");
 			console.log("speed>.....>>>>>>>>>>>>>..",speed);
-			alert("ee");
+			//alert("ee");
 			self.dropDownComplete('upper');
 		}else{
 			console.log("a");
