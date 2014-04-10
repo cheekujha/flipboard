@@ -102,7 +102,8 @@
 			}
 			var diffToRotate = self.initialIncilination + (( (90-self.initialIncilination) / (self.maxMoveOffset) ) * dy);
 			// console.log('dy........',dy,"maxMoveOffset........",self.maxMoveOffset);
-			if( dy > self.maxMoveOffset ){
+			if( dy >= self.maxMoveOffset ){
+				alert('1');
 				if(self.hasNextNews()){
 					$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-89.999deg)');
 					console.log('drop down reached');
@@ -137,7 +138,7 @@
 			dy = Math.abs(dy);
 			//console.log('dy..mmm......',dy,"maxMoveOffset........",self.maxMoveOffset);
 			var diffToRotate = self.initialIncilination + ( ( (90-self.initialIncilination) / self.maxMoveOffset) * dy );
-			if( dy > self.maxMoveOffset ){
+			if( dy >= self.maxMoveOffset ){
 				//console.log("reached......................................................");
 				if(self.hasPrevNews()){
 					$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(-89.999deg)');
@@ -169,6 +170,7 @@
 	}
 
 	FlipBoard.prototype.touchEnd = function(e){
+		alert("touchEnd");
 		var self = e.data.self;
 		e.preventDefault();
 		self.touchStartHappened = false;
@@ -180,7 +182,7 @@
 		console.log("touch end happened");
 		if(dy > 0){
 			if(self.lowerAlreadyMoving) {
-				console.log("bb");
+				alert("bb");
 				self.dropDown = false;
 				$(self.currentLowerSelector).prefixedCSS('transition','all .5s linear');
 				$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+self.initialIncilination+'deg)');
@@ -188,13 +190,13 @@
 				return;
 			}
 			if(speed > .5 && self.hasNextNews()){
-				console.log("cc");
+				alert("cc");
 				self.dropDownComplete('upper');
 				return
 			}
 
 			if( dy < self.maxMoveOffset || !self.hasNextNews()) {
-				console.log("dd");
+				alert("dd");
 				self.dropDown = false;
 				$(self.currentUpperSelector).prefixedCSS('transition','all .5s linear');
 				$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+self.initialIncilination+'deg)');
