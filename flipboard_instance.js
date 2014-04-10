@@ -38,7 +38,7 @@
 		// 	alert("touchcancel");
 		// 	console.log("touchcancel,,..should not come here");
 		// });
-		$('body').delegate(mainSelector,'touchcancel', {self : this} ,this.touchMove);
+		$('body').delegate(mainSelector,'touchcancel', {self : this} ,this.touchEnd);
 
 		$('body').delegate(mainSelector,FlipBoard.events.drag(), {self:this}, this.touchMove);
 
