@@ -265,7 +265,7 @@
 			var time = FlipBoard.getTime($(this.currentUpperSelector));
 			$(this.currentUpperSelector).prefixedCSS('transition','all '+time+'s linear');
 			alert("112");
-			$(this.currentUpperSelector).one($.domPrefixed("transitionend"),function(){
+			$(this.currentUpperSelector).one("WebkitTransitionEnd",function(){
 				alert("113");
 				$(that.currentUpperSelector).prefixedCSS('transition','none');
 				$(that.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)').css({'z-index':'1'});
