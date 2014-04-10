@@ -182,6 +182,7 @@
 		var dy = (finalPoint.y - self.firstPoint.y);
 		console.log("touch end happened");
 		if(dy > 0){
+			alert("positive");
 			if(self.lowerAlreadyMoving) {
 				alert("bb");
 				self.dropDown = false;
@@ -209,9 +210,10 @@
 			self.dropDownComplete('upper');
 		}else{
 			console.log("a");
+			alert("negative");
 			dy = Math.abs(dy);
 			if(self.upperAlreadyMoving) {
-				console.log("b");
+				alert("b");
 				self.dropDown = false;
 				$(self.currentUpperSelector).prefixedCSS('transition','all .5s linear');
 				$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+self.initialIncilination+'deg)');
@@ -219,19 +221,19 @@
 				return;
 			}
 			if(speed > .2 && self.hasPrevNews()){
-				console.log("c");
+				alert("c");
 				self.dropDownComplete('lower');
 				return
 			}
 			if( dy < self.maxMoveOffset || !self.hasPrevNews()) {
-				console.log("d");
+				alert("d");
 				self.dropDown = false;
 				$(self.currentLowerSelector).prefixedCSS('transition','all .5s linear');
 				$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+self.initialIncilination+'deg)');
 				self.lowerAlreadyMoving = false;
 				return;
 			}
-			console.log("e");
+			alert("e");
 			self.dropDownComplete('lower');
 		}
 	}
