@@ -104,7 +104,7 @@
 			var diffToRotate = self.initialIncilination + (( (90-self.initialIncilination) / (self.maxMoveOffset) ) * dy);
 			// console.log('dy........',dy,"maxMoveOffset........",self.maxMoveOffset);
 			if( dy >= self.maxMoveOffset ){
-				alert('1');
+				//alert('1');
 				if(self.hasNextNews()){
 					$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-89.999deg)');
 					console.log('drop down reached');
