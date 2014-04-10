@@ -191,12 +191,13 @@
 				self.lowerAlreadyMoving = false;
 				return;
 			}
+			alert("11");
 			if(speed > .5 && self.hasNextNews()){
 				alert("cc");
 				self.dropDownComplete('upper');
 				return
 			}
-
+			alert("12");
 			if( dy < self.maxMoveOffset || !self.hasNextNews()) {
 				alert("dd");
 				self.dropDown = false;
@@ -205,8 +206,9 @@
 				self.upperAlreadyMoving = false;
 				return;
 			}
+			// alert("13");
 			console.log("speed>.....>>>>>>>>>>>>>..",speed);
-			console.log("ee");
+			alert("ee");
 			self.dropDownComplete('upper');
 		}else{
 			console.log("a");
@@ -254,7 +256,7 @@
 	}
 
 	FlipBoard.prototype.dropDownComplete = function(direction){
-		console.log("dropDownComplete");
+		alert("dropDownComplete");
 		this.dropDown = false;
 		var that = this;
 		if(direction == 'upper' && that.hasNextNews()){
