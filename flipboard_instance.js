@@ -33,11 +33,12 @@
 		$('body').delegate(mainSelector,FlipBoard.events.tap(),{self:this} ,this.touchStart);
 
 
-		$('body').delegate(mainSelector,'touchcancel', function(e){
-			e.preventDefault();
-			alert("touchcancel");
-			console.log("touchcancel,,..should not come here");
-		});
+		// $('body').delegate(mainSelector,'touchcancel', function(e){
+		// 	e.preventDefault();
+		// 	alert("touchcancel");
+		// 	console.log("touchcancel,,..should not come here");
+		// });
+		$('body').delegate(mainSelector,'touchcancel', {self : this} ,this.touchMove);
 
 		$('body').delegate(mainSelector,FlipBoard.events.drag(), {self:this}, this.touchMove);
 
