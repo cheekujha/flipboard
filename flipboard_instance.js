@@ -17,6 +17,7 @@
 		this.nextLowerSelector = this.lowerSelector2;
 		this.firstPoint= {};
 		this.prevPoint = {};
+		this.movePoint = {};
 		this.initialTime;
 		this.finalTime;
 		this.touchStartHappened = false;
@@ -28,7 +29,6 @@
 		this.initialIncilination = options.initialIncilination || 0;
 		var mainSelector = options.mainSelector || '.main-container';
 
-		this.initDisplay();
 
 		$('body').delegate(mainSelector,FlipBoard.events.tap(),{self:this} ,this.touchStart);
 
@@ -91,8 +91,8 @@
 		if(!self.touchStartHappened){
 			return
 		}
-		var movePoint = FlipBoard.getTouchPosition(e).y;		
-		var dy = (movePoint  - self.firstPoint.y); 
+		self.movePoint = FlipBoard.getTouchPosition(e);		
+		var dy = (self.movePoint.y  - self.firstPoint.y); 
 
 		if(dy > 0){
 			if(self.lowerAlreadyMoving){
@@ -107,23 +107,18 @@
 					self.dropDown = true;
 					var lowerDiffToRotate = 90 - (diffToRotate - 90);
 					// console.log('drop down reached',lowerDiffToRotate);
-					$(self.upperLowerSelector).prefixedCSS('transition','none').css({'visibility':'visible'});
+					$(self.upperLowerSelector).prefixedCSS('transition','none').css({'visibility':'visible','z-index':'3'});
 					if(lowerDiffToRotate > self.initialIncilination){
 						$(self.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+lowerDiffToRotate+'deg)');
-						$(self.upperLowerSelector).css('z-index','3');
 					}
 				}
 			}
 			else if( dy > self.minMoveOffset) {
 				self.upperAlreadyMoving = true;
-			// else{	// if()
-				// if(diffToRotate > self.initialIncilination){
-				// 	return
-				// }
-				$(self.upperLowerSelector).css({'visibility':'hidden'});
+				$(self.upperLowerSelector).css({'visibility':'hidden','z-index':'0'});
 				$(self.currentUpperSelector).prefixedCSS('transition','none');
 				if(self.hasNextNews()){
-					$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX('+-diffToRotate+'deg)');
+					$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX('+-(diffToRotate-.001)+'deg)');
 				}else{
 					if(diffToRotate < self.noNewsRotateOffset){
 						$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX('+-diffToRotate+'deg)');
@@ -161,7 +156,7 @@
 				$(self.lowerUpperSelector).css({'visibility':'hidden'});
 				$(self.currentLowerSelector).prefixedCSS('transition','none');
 				if(self.hasPrevNews()){
-					$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+diffToRotate+'deg)');
+					$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+(diffToRotate-.001)+'deg)');
 				}else{
 					if(diffToRotate < self.noNewsRotateOffset){
 						$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+diffToRotate+'deg)');
@@ -176,50 +171,62 @@
 		e.preventDefault();
 		self.touchStartHappened = false;
 		self.finalTime = (new Date).getTime();
-		var finalPoint = FlipBoard.getTouchPosition(e);
+		// var finalPoint = FlipBoard.getTouchPosition(e);
+		var finalPoint = self.movePoint;
 		var speed = Math.abs((finalPoint.y - self.firstPoint.y) /(self.finalTime - self.initialTime));
 		var dy = (finalPoint.y - self.firstPoint.y);
 		console.log("touch end happened");
 		if(dy > 0){
 			if(self.lowerAlreadyMoving) {
+				console.log("bb");
 				self.dropDown = false;
 				$(self.currentLowerSelector).prefixedCSS('transition','all .5s linear');
 				$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+self.initialIncilination+'deg)');
 				self.lowerAlreadyMoving = false;
 				return;
 			}
-			if( dy < self.maxMoveOffset || !self.hasNextNews()) {
-				self.dropDown = false;
-				$(self.currentUpperSelector).prefixedCSS('transition','all .5s linear');
-				$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+self.initialIncilination+'deg)');
-				self.upperAlreadyMoving = false;
-				return;
-			}
-			if(speed > .8){
+			if(speed > .5 && self.hasNextNews()){
+				console.log("cc");
 				self.dropDownComplete('upper');
 				return
 			}
-			self.dropDownComplete('upper');
-		}else{
-			dy = Math.abs(dy);
-			if(self.upperAlreadyMoving) {
+
+			if( dy < self.maxMoveOffset || !self.hasNextNews()) {
+				console.log("dd");
 				self.dropDown = false;
 				$(self.currentUpperSelector).prefixedCSS('transition','all .5s linear');
 				$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+self.initialIncilination+'deg)');
 				self.upperAlreadyMoving = false;
 				return;
 			}
+			console.log("speed>.....>>>>>>>>>>>>>..",speed);
+			console.log("ee");
+			self.dropDownComplete('upper');
+		}else{
+			console.log("a");
+			dy = Math.abs(dy);
+			if(self.upperAlreadyMoving) {
+				console.log("b");
+				self.dropDown = false;
+				$(self.currentUpperSelector).prefixedCSS('transition','all .5s linear');
+				$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+self.initialIncilination+'deg)');
+				self.upperAlreadyMoving = false;
+				return;
+			}
+			if(speed > .2 && self.hasPrevNews()){
+				console.log("c");
+				self.dropDownComplete('lower');
+				return
+			}
 			if( dy < self.maxMoveOffset || !self.hasPrevNews()) {
+				console.log("d");
 				self.dropDown = false;
 				$(self.currentLowerSelector).prefixedCSS('transition','all .5s linear');
 				$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+self.initialIncilination+'deg)');
 				self.lowerAlreadyMoving = false;
 				return;
 			}
-			if(speed > .2){
-				self.dropDownComplete('lower');
-				return
-			}
+			console.log("e");
 			self.dropDownComplete('lower');
 		}
 	}
@@ -240,11 +247,10 @@
 	}
 
 	FlipBoard.prototype.dropDownComplete = function(direction){
-		
+		console.log("dropDownComplete");
 		this.dropDown = false;
 		var that = this;
-		if(direction == 'upper'){
-			that.upperAlreadyMoving = false;
+		if(direction == 'upper' && that.hasNextNews()){
 			// console.log("*****************",$(this.currentUpperSelector).css("-webkit-transform"));
 			var time = FlipBoard.getTime($(this.currentUpperSelector));
 			$(this.currentUpperSelector).prefixedCSS('transition','all '+time+'s linear');
@@ -252,10 +258,11 @@
 				$(that.currentUpperSelector).prefixedCSS('transition','none');
 				$(that.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)').css({'z-index':'1'});
 				//debugger
-				//$(currentUpperSelector).css({'z-index':'1'});
+				// $(currentUpperSelector).css({'z-index':'1'});
 				$(that.nextUpperSelector).css({'z-index':'2'});
-				$(that.upperLowerSelector).prefixedCSS('transition','all .5s linear').css({'visibility':'visible','z-index':'3'});
-				$(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+that.initialIncilination+'deg)');
+				$(that.upperLowerSelector).css({"z-index":"3"}).offset();
+				$(that.upperLowerSelector).prefixedCSS('transition','all .5s linear').css({'visibility':'visible'});
+				$(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(0deg)');
 				$(that.nextLowerSelector).html($(that.currentLowerSelector).html());
 				$(that.lowerUpperSelector).html($(that.currentUpperSelector).html());				
 				setTimeout(function(){
@@ -263,12 +270,14 @@
 					$(that.upperLowerSelector).prefixedCSS('transition','none').css({'z-index':'0'});
 					$(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)');
 					var chNews = that.getNextNews();
+					that.upperAlreadyMoving = false;
 					if(chNews){
-						$(that.upperLowerSelector).html(chNews.lower);
+						// $(that.upperLowerSelector).html(that.lowerTemplateFunction(chNews.lower));
+						that.lowerTemplateFunction($(that.upperLowerSelector), chNews.lower);
 						// debugger
-						$(that.nextUpperSelector).html(chNews.upper);
+						that.upperTemplateFunction($(that.nextUpperSelector),chNews.upper);
 					}else{
-						$(that.nextUpperSelector).html("NO MORE next NEWS");
+						$(that.nextUpperSelector).html("");
 					}
 				},500);
 				//toogle selectors
@@ -277,8 +286,7 @@
 				that.nextUpperSelector = temp;
 			});
 			$(this.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-90deg)');
-		}else{
-			that.lowerAlreadyMoving = false;
+		}else if(direction=="lower" && that.hasPrevNews()){
 			var time = FlipBoard.getTime($(this.currentLowerSelector));
 			$(this.currentLowerSelector).prefixedCSS('transition','all '+time+'s linear');
 			$(this.currentLowerSelector).one($.domPrefixed("transitionend"),function(){
@@ -287,21 +295,24 @@
 				//debugger
 				//$(currentUpperSelector).css({'z-index':'1'});
 				$(that.nextLowerSelector).css({'z-index':'2'});
+				$(that.lowerUpperSelector).css({'z-index':'3'}).offset();
 				$(that.lowerUpperSelector).prefixedCSS('transition','all .5s linear').css({'visibility':'visible'});
-				$(that.lowerUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)').css({'z-index':'3'});
+				$(that.lowerUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)');
 				$(that.nextUpperSelector).html($(that.currentUpperSelector).html());
 				$(that.upperLowerSelector).html($(that.currentLowerSelector).html());
 				setTimeout(function(){
 					$(that.currentUpperSelector).html($(that.lowerUpperSelector).html());
 					$(that.lowerUpperSelector).prefixedCSS('transition','none');
 					$(that.lowerUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-90deg)').css({'z-index':'0'});
+					that.lowerAlreadyMoving = false;
 					var chNews = that.getPrevNews();
 					if(chNews){
-						$(that.lowerUpperSelector).html(chNews.upper);
+						that.upperTemplateFunction($(that.lowerUpperSelector),chNews.upper);
 						// debugger
-						$(that.nextLowerSelector).html(chNews.lower);
+
+						that.lowerTemplateFunction($(that.nextLowerSelector),chNews.lower);
 					}else{
-						$(that.nextLowerSelector).html("NO MORE prev NEWS");
+						$(that.nextLowerSelector).html("");
 					}
 				},500);
 				//toogle selectors
@@ -317,16 +328,16 @@
 		switch (order)
 		{
 			case "current":
-				$(this.currentUpperSelector).html(content.upper);
-				$(this.currentLowerSelector).html(content.lower);
+				this.upperTemplateFunction($(this.currentUpperSelector),content.upper);
+				this.lowerTemplateFunction($(this.currentLowerSelector),content.lower);
 				break;
 			case "next":
-				$(this.nextUpperSelector).html(content.upper);
-				$(this.upperLowerSelector).html(content.lower);
+				this.upperTemplateFunction($(this.nextUpperSelector),content.upper);
+				this.lowerTemplateFunction($(this.upperLowerSelector),content.lower);
 				break
 			case "prev":
-				$(this.nextLowerSelector).html(content.lower);
-				$(this.lowerUpperSelector).html(content.upper);
+				this.upperTemplateFunction($(this.nextLowerSelector),content.lower);
+				this.lowerTemplateFunction($(this.lowerUpperSelector),content.upper);
 				break
 			default:
 				break;
@@ -441,4 +452,5 @@ $.extend({
 		);
 		return values;
 	}
-})
+});
+

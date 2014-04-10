@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, user-scalable=no">
 <title>TruJunction</title>
 <link rel="stylesheet" href="css/reset.css" />
 <link rel="stylesheet" href="css/flipboard.css" />
@@ -18,39 +19,42 @@
 
 <body>
 <div class="main-container">
-<div class="upper-container-news-1">upper-container-news-1</div>
-<div class="upper-container-news-2">NO-MORE-NEXT-NEWS</div>
-<div class="upper-lower-container">upper-lower-container</div>
-<div class="lower-container-news-1">lower-container-news-1</div>
-<div class="lower-container-news-2">NO-MORE-PREV-NEWS</div>
-<div class="lower-upper-container">lower-upper-container</div>
+<div class="upper-container-news-1"></div>
+<div class="upper-container-news-2"></div>
+<div class="upper-lower-container"></div>
+<div class="lower-container-news-1"></div>
+<div class="lower-container-news-2"></div>
+<div class="lower-upper-container"></div>
 </div>
 </body>
 <script type="text/javascript">
 
-	var newsObj = [{
-		upper:"THIS IS UPPER 0",
-		lower:"THIS IS LOWER 0"
-	},{
-		upper:"THIS IS UPPER 1",
-		lower:"THIS IS LOWER 1"
-	},
-	{
-		upper:"THIS IS UPPER 2",
-		lower:"THIS IS LOWER 2"
-	},
-	{
-		upper:"THIS IS UPPER 3",
-		lower:"THIS IS LOWER 3"
-	},
-	{
-		upper:"THIS IS UPPER 4",
-		lower:"THIS IS LOWER 4"
-	},
-	{
-		upper:"THIS IS UPPER 5",
-		lower:"THIS IS LOWER 5"
-	}];
+	var newsObj = [
+		{
+			upper:{
+				text: ["It Begins......"],
+				imageName: "begins.jpg",
+				size: "size-150"
+			},
+			lower:{
+				text: ["Ulta Ban Gya","Swipe Down."],
+				imageName: "mistake.jpg",
+				size: "size-50"
+			}
+		},
+		{
+			upper:{
+				text: ["It Begins.....1."],
+				imageName: "begins.jpg",
+				size: "size-150"
+			},
+			lower:{
+				text: ["Ulta Ban Gya","Swipe Down."],
+				imageName: "mistake.jpg",
+				size: "size-50"
+			}
+		}];
+	
 
 		var options = {
 		minMoveOffset : 20,
@@ -63,12 +67,54 @@
 		lowerUpperSelector : '.lower-upper-container',
 		mainSelector: '.main-container',
 		displayList: newsObj,
-		initialIncilination: 5
+		initialIncilination: 1
 	};
 	
 	var fb = new FlipBoard(options);
 	// fb.insertNews("current",newsObj[1]);
 	// fb.insertNews("next",newsObj[2]);
 	// fb.insertNews("prev",newsObj[0]);
+	fb.lowerTemplateFunction =  function($el,content){
+		var htmlString = "<div class='content-container'>";
+		for(var i = 0 ; i < content.text.length ; i++){
+			if( i < content.text.length - 1){
+				htmlString += "<span class='content-text'>"+content.text[i]+"</span>";
+			}else{
+				htmlString += "<span class='content-text'>"+content.text[i]+"</span>";
+			}
+		}
+
+		if(content.imageName){
+			htmlString += "<img src='flipboard_images/"+content.imageName+"' class='content-image "+content.size+"'/>"
+		}
+		htmlString += "</div>";
+		$el.html(htmlString);
+		var contContainer =	$el.find('.content-container'); 
+		var contHeight = contContainer.height();
+		contContainer.css('margin-top','-'+(contHeight/2)+'px');
+		//return html
+	}
+
+	fb.upperTemplateFunction = function($el,content){
+		var htmlString = "<div class='content-container'>";
+		for(var i = 0 ; i < content.text.length ; i++){
+			if( i < content.text.length - 1){
+				htmlString += "<span class='content-text'>"+content.text[i]+"</span><br>";
+			}else{
+				htmlString += "<span class='content-text'>"+content.text[i]+"</span>";
+			}
+		}
+
+		if(content.imageName){
+			htmlString += "<img src='flipboard_images/"+content.imageName+"' class='content-image "+content.size+"'/>"
+		}
+		htmlString += "</div>";
+		$el.html(htmlString);
+		var contContainer =	$el.find('.content-container'); 
+		var contHeight = contContainer.height();
+		contContainer.css('margin-top','-'+(contHeight/2)+'px');
+		//return html
+	}
+	fb.initDisplay();
 </script>
 </html>
