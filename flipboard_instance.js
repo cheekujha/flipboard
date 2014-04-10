@@ -171,7 +171,7 @@
 	}
 
 	FlipBoard.prototype.touchEnd = function(e){
-		alert("touchEnd");
+		// alert("touchEnd");
 		var self = e.data.self;
 		e.preventDefault();
 		self.touchStartHappened = false;
@@ -182,9 +182,9 @@
 		var dy = (finalPoint.y - self.firstPoint.y);
 		console.log("touch end happened");
 		if(dy > 0){
-			alert("positive");
+			// alert("positive");
 			if(self.lowerAlreadyMoving) {
-				alert("bb");
+				// alert("bb");
 				self.dropDown = false;
 				$(self.currentLowerSelector).prefixedCSS('transition','all .5s linear');
 				$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+self.initialIncilination+'deg)');
@@ -193,13 +193,13 @@
 			}
 			alert("11");
 			if(speed > .5 && self.hasNextNews()){
-				alert("cc");
+				// alert("cc");
 				self.dropDownComplete('upper');
 				return
 			}
 			alert("12");
 			if( dy < self.maxMoveOffset || !self.hasNextNews()) {
-				alert("dd");
+				// alert("dd");
 				self.dropDown = false;
 				$(self.currentUpperSelector).prefixedCSS('transition','all .5s linear');
 				$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+self.initialIncilination+'deg)');
@@ -212,10 +212,10 @@
 			self.dropDownComplete('upper');
 		}else{
 			console.log("a");
-			alert("negative");
+			// alert("negative");
 			dy = Math.abs(dy);
 			if(self.upperAlreadyMoving) {
-				alert("b");
+				// alert("b");
 				self.dropDown = false;
 				$(self.currentUpperSelector).prefixedCSS('transition','all .5s linear');
 				$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+self.initialIncilination+'deg)');
@@ -223,19 +223,19 @@
 				return;
 			}
 			if(speed > .2 && self.hasPrevNews()){
-				alert("c");
+				// alert("c");
 				self.dropDownComplete('lower');
 				return
 			}
 			if( dy < self.maxMoveOffset || !self.hasPrevNews()) {
-				alert("d");
+				// alert("d");
 				self.dropDown = false;
 				$(self.currentLowerSelector).prefixedCSS('transition','all .5s linear');
 				$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+self.initialIncilination+'deg)');
 				self.lowerAlreadyMoving = false;
 				return;
 			}
-			alert("e");
+			// alert("e");
 			self.dropDownComplete('lower');
 		}
 	}
@@ -256,18 +256,18 @@
 	}
 
 	FlipBoard.prototype.dropDownComplete = function(direction){
-		alert("dropDownComplete");
+		// alert("dropDownComplete");
 		this.dropDown = false;
 		var that = this;
 		if(direction == 'upper' && that.hasNextNews()){
-			alert("111");
+			// alert("111");
 			// console.log("*****************",$(this.currentUpperSelector).css("-webkit-transform"));
 			var time = FlipBoard.getTime($(this.currentUpperSelector));
 			$(this.currentUpperSelector).prefixedCSS('transition','all '+time+'s linear');
-			alert("112");
+			// alert("112");
 			// $(this.currentUpperSelector).one("transitionend",function(){
 			setTimeout(function(){
-				alert("113");
+				// alert("113");
 				$(that.currentUpperSelector).prefixedCSS('transition','none');
 				$(that.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)').css({'z-index':'1'});
 				//debugger
@@ -279,7 +279,7 @@
 				$(that.nextLowerSelector).html($(that.currentLowerSelector).html());
 				$(that.lowerUpperSelector).html($(that.currentUpperSelector).html());				
 				setTimeout(function(){
-					alert("114");
+					// alert("114");
 					$(that.currentLowerSelector).html($(that.upperLowerSelector).html());
 					$(that.upperLowerSelector).prefixedCSS('transition','none').css({'z-index':'0'});
 					$(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)');
@@ -303,7 +303,8 @@
 		}else if(direction=="lower" && that.hasPrevNews()){
 			var time = FlipBoard.getTime($(this.currentLowerSelector));
 			$(this.currentLowerSelector).prefixedCSS('transition','all '+time+'s linear');
-			$(this.currentLowerSelector).one($.domPrefixed("transitionend"),function(){
+			// $(this.currentLowerSelector).one($.domPrefixed("transitionend"),function(){
+			setTimeout(function(){
 				$(that.currentLowerSelector).prefixedCSS('transition','none');
 				$(that.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+that.initialIncilination+'deg)').css({'z-index':'1'});
 				//debugger
@@ -333,7 +334,7 @@
 				var temp = that.currentLowerSelector;
 				that.currentLowerSelector = that.nextLowerSelector;
 				that.nextLowerSelector = temp;
-			});
+			}, time);
 			$(this.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)');
 		}
 	}
