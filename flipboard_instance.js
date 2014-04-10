@@ -34,6 +34,8 @@
 
 
 		$('body').delegate(mainSelector,'touchcancel', function(e){
+			e.preventDefault();
+			alert("touchcancel");
 			console.log("touchcancel,,..should not come here");
 		});
 
