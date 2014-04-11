@@ -203,12 +203,6 @@
 				self.dropDown = false;
 				$(self.currentUpperSelector).prefixedCSS('transition','all .5s linear');
 				$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+self.initialIncilination+'deg)');
-				
-				$(self.currentUpperSelector).one($.domPrefixed("transitionend"),function(){
-					console.log("here it is");
-					alert("here it si");
-				});	
-
 				self.upperAlreadyMoving = false;
 				return;
 			}
@@ -262,7 +256,7 @@
 	}
 
 	FlipBoard.prototype.dropDownComplete = function(direction){
-		//alert("dropDownComplete");
+		alert("dropDownComplete");
 		this.dropDown = false;
 		var that = this;
 		if(direction == 'upper' && that.hasNextNews()){
@@ -271,9 +265,9 @@
 			var time = FlipBoard.getTime($(this.currentUpperSelector));
 			$(this.currentUpperSelector).prefixedCSS('transition','all '+time+'s linear');
 			//alert("112");
-			$(this.currentUpperSelector).one($.domPrefixed("transitionend"),function(){
+			$(this.currentUpperSelector).one($.domPrefixed("TransitionEnd"),function(){
 			// setTimeout(function(){
-				// alert("113");
+			  alert("113");
 				$(that.currentUpperSelector).prefixedCSS('transition','none');
 				$(that.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)').css({'z-index':'1'});
 				//debugger
@@ -309,7 +303,7 @@
 			$(this.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-90deg)');
 		}else if(direction=="lower" && that.hasPrevNews()){
 			var time = FlipBoard.getTime($(this.currentLowerSelector));
-			$(this.currentLowerSelector).prefixedCSS('transition','all '+time+'s linear');
+			$(this.currentLowerSelector).prefixedCSS('TransitionEnd','all '+time+'s linear');
 			// $(this.currentLowerSelector).one($.domPrefixed("transitionend"),function(){
 			setTimeout(function(){
 				$(that.currentLowerSelector).prefixedCSS('transition','none');
@@ -403,7 +397,7 @@
 		var totalTime = .5;
 		var angleRemaining = 90 - Math.abs($.getRotateValue(currentTransform)[0]);
 		return (.5*angleRemaining)/90;
-			console.log("current transform.",$.getRotateValue(currentTransform));
+			// console.log("current transform.",$.getRotateValue(currentTransform));
 	}
 
 	window.FlipBoard = FlipBoard;
