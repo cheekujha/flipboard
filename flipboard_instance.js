@@ -256,7 +256,7 @@
 	}
 
 	FlipBoard.prototype.dropDownComplete = function(direction){
-		// alert("dropDownComplete");
+		alert("dropDownComplete");
 		this.dropDown = false;
 		var that = this;
 		if(direction == 'upper' && that.hasNextNews()){
@@ -264,9 +264,10 @@
 			// console.log("*****************",$(this.currentUpperSelector).css("-webkit-transform"));
 			var time = FlipBoard.getTime($(this.currentUpperSelector));
 			$(this.currentUpperSelector).prefixedCSS('transition','all '+time+'s linear');
-			// alert("112");
-			// $(this.currentUpperSelector).one("transitionend",function(){
-			setTimeout(function(){
+			alert("112");
+			alert(Modernizr.prefixed("transitionend"));
+			$(this.currentUpperSelector).one(Modernizr.prefixed("transitionend"),function(){
+			// setTimeout(function(){
 				// alert("113");
 				$(that.currentUpperSelector).prefixedCSS('transition','none');
 				$(that.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)').css({'z-index':'1'});
@@ -292,13 +293,15 @@
 						that.upperTemplateFunction($(that.nextUpperSelector),chNews.upper);
 					}else{
 						$(that.nextUpperSelector).html("");
-					}
+					}	
 				},500);
 				//toogle selectors
 				var temp = that.currentUpperSelector;
 				that.currentUpperSelector = that.nextUpperSelector;
 				that.nextUpperSelector = temp;
-			}, time);
+			// }, time);
+			});
+			debugger
 			$(this.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-90deg)');
 		}else if(direction=="lower" && that.hasPrevNews()){
 			var time = FlipBoard.getTime($(this.currentLowerSelector));
