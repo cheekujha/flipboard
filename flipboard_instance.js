@@ -266,6 +266,9 @@
 			$(this.currentUpperSelector).prefixedCSS('transition','all '+time+'s linear');
 			alert("112");
 			alert(Modernizr.prefixed("transitionend"));
+			$(this.currentUpperSelector).one("transitionend",function(){
+				alert("normaltransitionend");
+			});
 			$(this.currentUpperSelector).one(Modernizr.prefixed("transitionend"),function(){
 			// setTimeout(function(){
 				// alert("113");
@@ -301,7 +304,6 @@
 				that.nextUpperSelector = temp;
 			// }, time);
 			});
-			debugger
 			$(this.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-90deg)');
 		}else if(direction=="lower" && that.hasPrevNews()){
 			var time = FlipBoard.getTime($(this.currentLowerSelector));
