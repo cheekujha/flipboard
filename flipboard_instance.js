@@ -256,7 +256,6 @@
 	}
 
 	FlipBoard.prototype.dropDownComplete = function(direction){
-		alert("dropDownComplete");
 		this.dropDown = false;
 		var that = this;
 		if(direction == 'upper' && that.hasNextNews()){
@@ -267,7 +266,6 @@
 			//alert("112");
 			$(this.currentUpperSelector).one($.domPrefixed("TransitionEnd"),function(){
 			// setTimeout(function(){
-			  alert("113");
 				$(that.currentUpperSelector).prefixedCSS('transition','none');
 				$(that.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)').css({'z-index':'1'});
 				//debugger
