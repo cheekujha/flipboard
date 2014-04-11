@@ -122,7 +122,7 @@
 				$(self.upperLowerSelector).css({'visibility':'hidden','z-index':'0'});
 				$(self.currentUpperSelector).prefixedCSS('transition','none');
 				if(self.hasNextNews()){
-					$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX('+-(diffToRotate-5)+'deg)');
+					$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX('+-(diffToRotate-.001)+'deg)');
 				}else{
 					if(diffToRotate < self.noNewsRotateOffset){
 						$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX('+-diffToRotate+'deg)');
@@ -203,6 +203,12 @@
 				self.dropDown = false;
 				$(self.currentUpperSelector).prefixedCSS('transition','all .5s linear');
 				$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+self.initialIncilination+'deg)');
+				
+				$(self.currentUpperSelector).one($.domPrefixed("transitionend"),function(){
+					console.log("here it is");
+					alert("here it si");
+				});	
+
 				self.upperAlreadyMoving = false;
 				return;
 			}
@@ -256,19 +262,19 @@
 	}
 
 	FlipBoard.prototype.dropDownComplete = function(direction){
-		alert("dropDownComplete");
+		//alert("dropDownComplete");
 		this.dropDown = false;
 		var that = this;
 		if(direction == 'upper' && that.hasNextNews()){
 			// alert("111");
-			// console.log("*****************",$(this.currentUpperSelector).css("-webkit-transform"));
+			console.log("here");
 			var time = FlipBoard.getTime($(this.currentUpperSelector));
 			$(this.currentUpperSelector).prefixedCSS('transition','all '+time+'s linear');
-			alert("112");
+			//alert("112");
 			$(this.currentUpperSelector).one($.domPrefixed("transitionend"),function(){
 			// setTimeout(function(){
 				// alert("113");
-				//$(that.currentUpperSelector).prefixedCSS('transition','none');
+				$(that.currentUpperSelector).prefixedCSS('transition','none');
 				$(that.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)').css({'z-index':'1'});
 				//debugger
 				// $(currentUpperSelector).css({'z-index':'1'});
