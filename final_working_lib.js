@@ -107,7 +107,7 @@
 				//alert('1');
 				if(self.hasNextNews()){
 					$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-89.999deg)');
-					// console.log('drop down reached');
+					console.log('drop down reached');
 					self.dropDown = true;
 					var lowerDiffToRotate = 90 - (diffToRotate - 90);
 					// console.log('drop down reached',lowerDiffToRotate);
@@ -147,7 +147,7 @@
 					var upperDiffToRotate =(180 - diffToRotate);
 					// console.log('drop down reached>>>>>>>>>>>>>>>>',upperDiffToRotate);
 					// console.log('>>>>>>>>>>>>>>>>>>>.',lowerUpperSelector);
-					$(self.lowerUpperSelector).prefixedCSS('transition','none').css({'z-index':'2','visibility':'visible'});
+					$(self.lowerUpperSelector).prefixedCSS('-webkit-transition','none').css({'z-index':'2','visibility':'visible'});
 					if(-upperDiffToRotate < self.initialIncilination){
 						$(self.lowerUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX('+-upperDiffToRotate+'deg)');
 						$(self.lowerUpperSelector).css('z-index','3');
@@ -186,10 +186,7 @@
 			if(self.lowerAlreadyMoving) {
 				// alert("bb");
 				self.dropDown = false;
-				$(self.currentLowerSelector).prefixedCSS('transition','-webkit-transform .5s linear');
-				$(self.currentLowerSelector).one($.domPrefixed("TransitionEnd"), function(){
-					return
-				});
+				$(self.currentLowerSelector).prefixedCSS('transition','all .5s linear');
 				$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+self.initialIncilination+'deg)');
 				self.lowerAlreadyMoving = false;
 				return;
@@ -203,9 +200,8 @@
 			//alert("12");
 			if( dy < self.maxMoveOffset || !self.hasNextNews()) {
 				// alert("dd");
-				console.log("here>>>>>>>>>>>");
 				self.dropDown = false;
-				$(self.currentUpperSelector).prefixedCSS('transition','-webkit-transform .5s linear');
+				$(self.currentUpperSelector).prefixedCSS('transition','all .5s linear');
 				$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+self.initialIncilination+'deg)');
 				self.upperAlreadyMoving = false;
 				return;
@@ -221,7 +217,7 @@
 			if(self.upperAlreadyMoving) {
 				// alert("b");
 				self.dropDown = false;
-				$(self.currentUpperSelector).prefixedCSS('transition','-webkit-transform .5s linear');
+				$(self.currentUpperSelector).prefixedCSS('transition','all .5s linear');
 				$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+self.initialIncilination+'deg)');
 				self.upperAlreadyMoving = false;
 				return;
@@ -234,7 +230,7 @@
 			if( dy < self.maxMoveOffset || !self.hasPrevNews()) {
 				// alert("d");
 				self.dropDown = false;
-				$(self.currentLowerSelector).prefixedCSS('transition','-webkit-transform .5s linear');
+				$(self.currentLowerSelector).prefixedCSS('transition','all .5s linear');
 				$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+self.initialIncilination+'deg)');
 				self.lowerAlreadyMoving = false;
 				return;
@@ -260,79 +256,83 @@
 	}
 
 	FlipBoard.prototype.dropDownComplete = function(direction){
-		console.log("dropDownComplete");
 		this.dropDown = false;
 		var that = this;
 		if(direction == 'upper' && that.hasNextNews()){
 			// alert("111");
-			
+			console.log("here");
 			var time = FlipBoard.getTime($(this.currentUpperSelector));
-			$(this.currentUpperSelector).prefixedCSS('transition','-webkit-transform '+time+'s linear');
+			$(this.currentUpperSelector).prefixedCSS('transition','all '+time+'s linear');
 			//alert("112");
 			$(this.currentUpperSelector).one($.domPrefixed("TransitionEnd"),function(){
-				console.log("here");
+			// setTimeout(function(){
 				$(that.currentUpperSelector).prefixedCSS('transition','none');
-				$(that.currentUpperSelector).unbind($.domPrefixed('TransitionEnd'));
 				$(that.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)').css({'z-index':'1'});
+				//debugger
+				// $(currentUpperSelector).css({'z-index':'1'});
 				$(that.nextUpperSelector).css({'z-index':'2'});
 				$(that.upperLowerSelector).css({"z-index":"3"}).offset();
-				$(that.upperLowerSelector).prefixedCSS('transition','-webkit-transform .5s linear').css({'visibility':'visible'});
+				$(that.upperLowerSelector).prefixedCSS('transition','all .5s linear').css({'visibility':'visible'});
+				$(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(0deg)');
 				$(that.nextLowerSelector).html($(that.currentLowerSelector).html());
-				$(that.lowerUpperSelector).html($(that.currentUpperSelector).html());	
-				$(that.upperLowerSelector).one($.domPrefixed("TransitionEnd"),function(){
-					console.log("here1");
+				$(that.lowerUpperSelector).html($(that.currentUpperSelector).html());				
+				setTimeout(function(){
+					// alert("114");
 					$(that.currentLowerSelector).html($(that.upperLowerSelector).html());
 					$(that.upperLowerSelector).prefixedCSS('transition','none').css({'z-index':'0'});
-					$(that.upperLowerSelector).unbind($.domPrefixed('TransitionEnd'));
 					$(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)');
 					var chNews = that.getNextNews();
 					that.upperAlreadyMoving = false;
 					if(chNews){
+						// $(that.upperLowerSelector).html(that.lowerTemplateFunction(chNews.lower));
 						that.lowerTemplateFunction($(that.upperLowerSelector), chNews.lower);
-						that.upperTemplateFunction($(that.currentUpperSelector),chNews.upper);
+						// debugger
+						that.upperTemplateFunction($(that.nextUpperSelector),chNews.upper);
 					}else{
-						$(that.currentUpperSelector).html("");
-					}
-					var temp = that.currentUpperSelector;
-					that.currentUpperSelector = that.nextUpperSelector;
-					that.nextUpperSelector = temp;
-				});			
-				$(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(0deg)');
+						$(that.nextUpperSelector).html("");
+					}	
+				},500);
+				//toogle selectors
+				var temp = that.currentUpperSelector;
+				that.currentUpperSelector = that.nextUpperSelector;
+				that.nextUpperSelector = temp;
+			// }, time);
 			});
 			$(this.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-90deg)');
 		}else if(direction=="lower" && that.hasPrevNews()){
 			var time = FlipBoard.getTime($(this.currentLowerSelector));
-			$(this.currentLowerSelector).prefixedCSS('transition','-webkit-transform '+time+'s linear');
+			$(this.currentLowerSelector).prefixedCSS('transition','all '+time+'s linear');
 			$(this.currentLowerSelector).one($.domPrefixed("TransitionEnd"),function(){
-				console.log("here it is");
+			// setTimeout(function(){
 				$(that.currentLowerSelector).prefixedCSS('transition','none');
-				$(that.currentLowerSelector).unbind($.domPrefixed('TransitionEnd'));
 				$(that.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+that.initialIncilination+'deg)').css({'z-index':'1'});
+				//debugger
+				//$(currentUpperSelector).css({'z-index':'1'});
 				$(that.nextLowerSelector).css({'z-index':'2'});
-				$(that.lowerUpperSelector).css({'z-index':'3','visibility':'visible'}).offset();
-				$(that.lowerUpperSelector).prefixedCSS('transition','-webkit-transform .5s linear');
+				$(that.lowerUpperSelector).css({'z-index':'3'}).offset();
+				$(that.lowerUpperSelector).prefixedCSS('transition','all .5s linear').css({'visibility':'visible'});
+				$(that.lowerUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)');
 				$(that.nextUpperSelector).html($(that.currentUpperSelector).html());
 				$(that.upperLowerSelector).html($(that.currentLowerSelector).html());
-				
-				$(that.lowerUpperSelector).one($.domPrefixed('TransitionEnd'),function(){
-					console.log("coming here");
+				setTimeout(function(){
 					$(that.currentUpperSelector).html($(that.lowerUpperSelector).html());
 					$(that.lowerUpperSelector).prefixedCSS('transition','none');
-					$(that.lowerUpperSelector).unbind('TransitionEnd');
 					$(that.lowerUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-90deg)').css({'z-index':'0'});
 					that.lowerAlreadyMoving = false;
 					var chNews = that.getPrevNews();
 					if(chNews){
 						that.upperTemplateFunction($(that.lowerUpperSelector),chNews.upper);
-						that.lowerTemplateFunction($(that.currentLowerSelector),chNews.lower);
+						// debugger
+
+						that.lowerTemplateFunction($(that.nextLowerSelector),chNews.lower);
 					}else{
-						$(that.currentLowerSelector).html("");
+						$(that.nextLowerSelector).html("");
 					}
-					var temp = that.currentLowerSelector;
-					that.currentLowerSelector = that.nextLowerSelector;
-					that.nextLowerSelector = temp;
-				});
-				$(that.lowerUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)');
+				},500);
+				//toogle selectors
+				var temp = that.currentLowerSelector;
+				that.currentLowerSelector = that.nextLowerSelector;
+				that.nextLowerSelector = temp;
 			});
 			$(this.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)');
 		}
