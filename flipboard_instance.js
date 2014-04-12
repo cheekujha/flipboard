@@ -291,8 +291,8 @@
 				$(that.currentUpperSelector).unbind($.domPrefixed('TransitionEnd'));
 				$(that.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)').css({'z-index':'1'});
 				$(that.nextUpperSelector).css({'z-index':'2'});
-				$(that.upperLowerSelector).css({"z-index":"3"}).offset();
-				$(that.upperLowerSelector).prefixedCSS('transition','-webkit-transform .5s linear').css({'visibility':'visible'});
+				$(that.upperLowerSelector).css({"z-index":"3","visibility":"visible"}).offset();
+				$(that.upperLowerSelector).prefixedCSS('transition','-webkit-transform .5s linear');
 				$(that.nextLowerSelector).html($(that.currentLowerSelector).html());
 				$(that.lowerUpperSelector).html($(that.currentUpperSelector).html());	
 				$(that.upperLowerSelector).one($.domPrefixed("TransitionEnd"),function(){
@@ -313,7 +313,7 @@
 						var temp = that.currentUpperSelector;
 						that.currentUpperSelector = that.nextUpperSelector;
 						that.nextUpperSelector = temp;
-					},500);	
+					},100);	
 				});			
 				$(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(0deg)');
 			});
