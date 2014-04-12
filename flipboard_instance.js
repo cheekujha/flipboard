@@ -315,7 +315,7 @@
 						var temp = that.currentUpperSelector;
 						that.currentUpperSelector = that.nextUpperSelector;
 						that.nextUpperSelector = temp;
-					},100);	
+					},200);	
 				});			
 				$(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(0deg)');
 			});
