@@ -181,11 +181,16 @@
 		self.touchStartHappened = false;
 		self.finalTime = (new Date).getTime();
 		// var finalPoint = FlipBoard.getTouchPosition(e);
-		var finalPoint = self.movePoint;
+		var finalPoint = $.extend(true, self.movePoint || self.firstPoint,{});
+		console.log('K>>>>>>>>>>>>>>>>>>>>',finalPoint)
 		var speed = Math.abs((finalPoint.y - self.firstPoint.y) /(self.finalTime - self.initialTime));
 		var dy = (finalPoint.y - self.firstPoint.y);
 		console.log("touch end happened");
+		self.movePoint = undefined;
 		if(dy > 0){
+			if(dy < self.minMoveOffset){
+				return
+			}
 			// alert("positive");
 			if(self.lowerAlreadyMoving) {
 				// alert("bb");
@@ -222,6 +227,10 @@
 			console.log("a");
 			// alert("negative");
 			dy = Math.abs(dy);
+			console.log(">>>>>>>>>>>>>>>>>>>",dy)
+			if(dy < self.minMoveOffset){
+				return
+			}
 			if(self.upperAlreadyMoving) {
 				// alert("b");
 				self.dropDown = false;
