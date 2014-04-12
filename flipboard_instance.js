@@ -182,7 +182,6 @@
 		self.finalTime = (new Date).getTime();
 		// var finalPoint = FlipBoard.getTouchPosition(e);
 		var finalPoint = $.extend(true, self.movePoint || self.firstPoint,{});
-		console.log('K>>>>>>>>>>>>>>>>>>>>',finalPoint)
 		var speed = Math.abs((finalPoint.y - self.firstPoint.y) /(self.finalTime - self.initialTime));
 		var dy = (finalPoint.y - self.firstPoint.y);
 		console.log("touch end happened");
@@ -297,7 +296,6 @@
 				$(that.nextLowerSelector).html($(that.currentLowerSelector).html());
 				$(that.lowerUpperSelector).html($(that.currentUpperSelector).html());	
 				$(that.upperLowerSelector).one($.domPrefixed("TransitionEnd"),function(){
-					console.log("here1");
 					$(that.currentLowerSelector).html($(that.upperLowerSelector).html());
 					$(that.upperLowerSelector).prefixedCSS('transition','none');
 					$(that.upperLowerSelector).unbind($.domPrefixed('TransitionEnd'));
@@ -315,7 +313,7 @@
 						var temp = that.currentUpperSelector;
 						that.currentUpperSelector = that.nextUpperSelector;
 						that.nextUpperSelector = temp;
-					},200);	
+					},500);	
 				});			
 				$(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(0deg)');
 			});
