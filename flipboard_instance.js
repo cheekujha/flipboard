@@ -292,11 +292,12 @@
 				$(that.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)').css({'z-index':'1'});
 				$(that.nextUpperSelector).css({'z-index':'2'});
 				$(that.upperLowerSelector).css({"z-index":"3","visibility":"visible"}).offset();
+
 				$(that.upperLowerSelector).prefixedCSS('transition','-webkit-transform .5s linear');
 				$(that.nextLowerSelector).html($(that.currentLowerSelector).html());
 				$(that.lowerUpperSelector).html($(that.currentUpperSelector).html());	
 				$(that.upperLowerSelector).one($.domPrefixed("TransitionEnd"),function(){
-					$(that.currentLowerSelector).html($(that.upperLowerSelector).html());
+					$(that.currentLowerSelector).html($(that.upperLowerSelector).html()).offset();
 					$(that.upperLowerSelector).prefixedCSS('transition','none');
 					$(that.upperLowerSelector).unbind($.domPrefixed('TransitionEnd'));
 					setTimeout(function(){
