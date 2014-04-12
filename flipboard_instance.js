@@ -297,7 +297,7 @@
 						var temp = that.currentUpperSelector;
 						that.currentUpperSelector = that.nextUpperSelector;
 						that.nextUpperSelector = temp;
-					},0);
+					},100);
 					// $(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)').css({'z-index':'0'});
 					
 					
@@ -337,7 +337,7 @@
 						var temp = that.currentLowerSelector;
 						that.currentLowerSelector = that.nextLowerSelector;
 						that.nextLowerSelector = temp;
-					},0);
+					},100);
 				});
 				$(that.lowerUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)');
 			});
