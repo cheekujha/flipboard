@@ -23,6 +23,7 @@
 		this.touchStartHappened = false;
 		this.upperAlreadyMoving = false;
 		this.lowerAlreadyMoving = false;
+		this.dropInProgress = false;
 		this.displayList = options.displayList || [];
 		this.currentPointer = 0;
 		this.noNewsRotateOffset = options.noNewsRotateOffset || 75;
@@ -82,6 +83,9 @@
 	FlipBoard.prototype.touchStart = function(e){
 		var self = e.data.self;
 		e.preventDefault();
+		if(self.dropInProgress){
+			return
+		}
 		self.touchStartHappened = true;
 		self.initialTime = (new Date).getTime();
 		self.firstPoint = FlipBoard.getTouchPosition(e);
@@ -91,7 +95,7 @@
 	FlipBoard.prototype.touchMove = function(e){
 		e.preventDefault();
 		var self = e.data.self;
-		if(!self.touchStartHappened){
+		if(!self.touchStartHappened || self.dropInProgress){
 			return
 		}
 		self.movePoint = FlipBoard.getTouchPosition(e);		
@@ -263,6 +267,10 @@
 		console.log("dropDownComplete");
 		this.dropDown = false;
 		var that = this;
+		if(that.dropInProgress) {
+			return
+		}
+		that.dropInProgress = true;
 		if(direction == 'upper' && that.hasNextNews()){
 			// alert("111");
 			
@@ -288,6 +296,7 @@
 					 $(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)').css({'z-index':'0'});
 					 	var chNews = that.getNextNews();
 						that.upperAlreadyMoving = false;
+						that.dropInProgress = false;
 						if(chNews){
 							that.lowerTemplateFunction($(that.upperLowerSelector), chNews.lower);
 							that.upperTemplateFunction($(that.currentUpperSelector),chNews.upper);
@@ -297,10 +306,7 @@
 						var temp = that.currentUpperSelector;
 						that.currentUpperSelector = that.nextUpperSelector;
 						that.nextUpperSelector = temp;
-					},100);
-					// $(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)').css({'z-index':'0'});
-					
-					
+					},100);	
 				});			
 				$(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(0deg)');
 			});
@@ -327,6 +333,7 @@
 					setTimeout(function(){
 						$(that.lowerUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-90deg)').css({'z-index':'0'});
 						that.lowerAlreadyMoving = false;
+						that.dropInProgress = false;
 						var chNews = that.getPrevNews();
 						if(chNews){
 							that.upperTemplateFunction($(that.lowerUpperSelector),chNews.upper);
