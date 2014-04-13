@@ -292,16 +292,22 @@
 				$(that.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)').css({'z-index':'1'});
 				$(that.nextUpperSelector).css({'z-index':'2'});
 				$(that.upperLowerSelector).css({"z-index":"3","visibility":"visible"}).offset();
-
+				
 				$(that.upperLowerSelector).prefixedCSS('transition','-webkit-transform .5s linear');
 				$(that.nextLowerSelector).html($(that.currentLowerSelector).html());
 				$(that.lowerUpperSelector).html($(that.currentUpperSelector).html());	
 				$(that.upperLowerSelector).one($.domPrefixed("TransitionEnd"),function(){
-					$(that.currentLowerSelector).html($(that.upperLowerSelector).html()).offset();
+					// $(that.currentLowerSelector).html($(that.upperLowerSelector).html()).offset();
 					$(that.upperLowerSelector).prefixedCSS('transition','none');
 					$(that.upperLowerSelector).unbind($.domPrefixed('TransitionEnd'));
+					//writing new hack
+					var temp1 = that.currentLowerSelector;
+					that.currentLowerSelector = that.upperLowerSelector;
+					that.upperLowerSelector = temp1;
+
 					setTimeout(function(){
-					 $(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)').css({'z-index':'0'});
+					  $(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)').css({'z-index':'1'});
+					  $(that.currentLowerSelector).css({"z-index":"2"});
 					 	var chNews = that.getNextNews();
 						that.upperAlreadyMoving = false;
 						that.dropInProgress = false;
@@ -335,11 +341,18 @@
 				
 				$(that.lowerUpperSelector).one($.domPrefixed('TransitionEnd'),function(){
 					console.log("coming here");
-					$(that.currentUpperSelector).html($(that.lowerUpperSelector).html());
+					// $(that.currentUpperSelector).html($(that.lowerUpperSelector).html());
 					$(that.lowerUpperSelector).prefixedCSS('transition','none');
 					$(that.lowerUpperSelector).unbind('TransitionEnd');
+
+					//writing new hack
+					var temp1 = that.currentUpperSelector;
+					that.currentUpperSelector = that.lowerUpperSelector;
+					that.lowerUpperSelector = temp1;
+
 					setTimeout(function(){
-						$(that.lowerUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-90deg)').css({'z-index':'0'});
+						$(that.lowerUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-90deg)').css({'z-index':'1'});
+						$(that.currentUpperSelector).css({"z-index":"2"});
 						that.lowerAlreadyMoving = false;
 						that.dropInProgress = false;
 						var chNews = that.getPrevNews();
@@ -357,6 +370,8 @@
 				$(that.lowerUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)');
 			});
 			$(this.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)');
+		}else{
+			that.dropInProgress = false;
 		}
 	}
 
