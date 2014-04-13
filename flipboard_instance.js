@@ -298,9 +298,9 @@
 				$(that.lowerUpperSelector).html($(that.currentUpperSelector).html());	
 				$(that.upperLowerSelector).one($.domPrefixed("TransitionEnd"),function(){
 					// $(that.currentLowerSelector).html($(that.upperLowerSelector).html()).offset();
-					alert($(that.upperLowerSelector).css('z-index'));
-					alert($(that.currentLowerSelector).css('z-index'));
-					alert($(that.nextLowerSelector).css('z-index'));
+					// alert($(that.upperLowerSelector).css('z-index'));
+					// alert($(that.currentLowerSelector).css('z-index'));
+					// alert($(that.nextLowerSelector).css('z-index'));
 					$(that.upperLowerSelector).prefixedCSS('transition','none');
 					$(that.upperLowerSelector).unbind($.domPrefixed('TransitionEnd'));
 					//writing new hack
@@ -308,10 +308,10 @@
 					that.currentLowerSelector = that.upperLowerSelector;
 					that.upperLowerSelector = temp1;
 
-					setTimeout(function(){
+					//setTimeout(function(){
 						$(that.upperLowerSelector).prefixedCSS('transition','none');
 					  $(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)').css({'z-index':'1'});
-					  // $(that.currentLowerSelector).css({"z-index":"2"}).offset();
+					  $(that.currentLowerSelector).css({"z-index":"2"}).offset();
 
 					 	var chNews = that.getNextNews();
 						that.upperAlreadyMoving = false;
@@ -325,7 +325,7 @@
 						var temp = that.currentUpperSelector;
 						that.currentUpperSelector = that.nextUpperSelector;
 						that.nextUpperSelector = temp;
-					},0);	
+					//},0);	
 				});			
 				$(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(0deg)');
 			});
