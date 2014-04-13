@@ -367,7 +367,8 @@
 					that.currentUpperSelector = that.lowerUpperSelector;
 					that.lowerUpperSelector = temp1;
 
-					setTimeout(function(){
+					// setTimeout(function(){
+						$(that.lowerUpperSelector).css({'z-index':'1'});
 						$(that.lowerUpperSelector).prefixedCSS('transition','none');
 						$(that.lowerUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-90deg)').css({'z-index':'1'});
 						setTimeout(function(){
@@ -385,7 +386,7 @@
 						var temp = that.currentLowerSelector;
 						that.currentLowerSelector = that.nextLowerSelector;
 						that.nextLowerSelector = temp;
-					},100);
+					// },100);
 				});
 				$(that.lowerUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)');
 			});
