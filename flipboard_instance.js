@@ -315,7 +315,7 @@
 					  $(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)');
 					  setTimeout(function(){
 					  	$(that.currentLowerSelector).css({"z-index":"2"});
-					  });
+					  },200);
 					 	var chNews = that.getNextNews();
 						that.upperAlreadyMoving = false;
 						that.dropInProgress = false;
