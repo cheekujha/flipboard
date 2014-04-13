@@ -292,12 +292,15 @@
 				$(that.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)').css({'z-index':'1'});
 				$(that.nextUpperSelector).css({'z-index':'2'});
 				$(that.upperLowerSelector).css({"z-index":"3","visibility":"visible"}).offset();
-				
+
 				$(that.upperLowerSelector).prefixedCSS('transition','-webkit-transform .5s linear');
 				$(that.nextLowerSelector).html($(that.currentLowerSelector).html());
 				$(that.lowerUpperSelector).html($(that.currentUpperSelector).html());	
 				$(that.upperLowerSelector).one($.domPrefixed("TransitionEnd"),function(){
 					// $(that.currentLowerSelector).html($(that.upperLowerSelector).html()).offset();
+					alert($(that.upperLowerSelector).css('z-index'));
+					alert($(that.currentLowerSelector).css('z-index'));
+					alert($(that.nextLowerSelector).css('z-index'));
 					$(that.upperLowerSelector).prefixedCSS('transition','none');
 					$(that.upperLowerSelector).unbind($.domPrefixed('TransitionEnd'));
 					//writing new hack
@@ -308,7 +311,7 @@
 					setTimeout(function(){
 						$(that.upperLowerSelector).prefixedCSS('transition','none');
 					  $(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)').css({'z-index':'1'});
-					  $(that.currentLowerSelector).css({"z-index":"5"}).offset();
+					  $(that.currentLowerSelector).css({"z-index":"2"}).offset();
 
 					 	var chNews = that.getNextNews();
 						that.upperAlreadyMoving = false;
