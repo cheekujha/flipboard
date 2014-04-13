@@ -205,7 +205,6 @@
 			//alert("11");
 			if(speed > .5 && self.hasNextNews()){
 				// alert("cc");
-				$(self.nextLowerSelector).css({"visibility":"hidden"}).offset();
 				self.dropDownComplete('upper');
 				return
 			}
@@ -222,7 +221,6 @@
 			// alert("13");
 			console.log("speed>.....>>>>>>>>>>>>>..",speed);
 			//alert("ee");
-			$(self.nextLowerSelector).css({"visibility":"hidden"}).offset();
 			self.dropDownComplete('upper');
 		}else{
 			console.log("a");
@@ -310,7 +308,7 @@
 					setTimeout(function(){
 						$(that.upperLowerSelector).prefixedCSS('transition','none');
 					  $(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)').css({'z-index':'1'});
-					  $(that.currentLowerSelector).css({"z-index":"2"}).offset();
+					  $(that.currentLowerSelector).css({"z-index":"5"}).offset();
 
 					 	var chNews = that.getNextNews();
 						that.upperAlreadyMoving = false;
@@ -324,7 +322,7 @@
 						var temp = that.currentUpperSelector;
 						that.currentUpperSelector = that.nextUpperSelector;
 						that.nextUpperSelector = temp;
-					},100);	
+					},0);	
 				});			
 				$(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(0deg)');
 			});
