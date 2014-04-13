@@ -303,16 +303,19 @@
 					// alert($(that.nextLowerSelector).css('z-index'));
 					$(that.upperLowerSelector).prefixedCSS('transition','none');
 					$(that.upperLowerSelector).unbind($.domPrefixed('TransitionEnd'));
+
 					//writing new hack
 					var temp1 = that.currentLowerSelector;
 					that.currentLowerSelector = that.upperLowerSelector;
 					that.upperLowerSelector = temp1;
 
 					//setTimeout(function(){
+						$(that.upperLowerSelector).css({'z-index':'1'});
 						$(that.upperLowerSelector).prefixedCSS('transition','none');
-					  $(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)').css({'z-index':'1'});
-					  $(that.currentLowerSelector).css({"z-index":"2"}).offset();
-
+					  $(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)');
+					  setTimeout(function(){
+					  	$(that.currentLowerSelector).css({"z-index":"2"});
+					  });
 					 	var chNews = that.getNextNews();
 						that.upperAlreadyMoving = false;
 						that.dropInProgress = false;
