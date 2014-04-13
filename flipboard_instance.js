@@ -286,7 +286,7 @@
 			$(this.currentUpperSelector).prefixedCSS('transition','-webkit-transform '+time+'s linear');
 			//alert("112");
 			$(this.currentUpperSelector).one($.domPrefixed("TransitionEnd"),function(){
-				console.log("here");
+				// console.log("here");
 				$(that.currentUpperSelector).prefixedCSS('transition','none');
 				$(that.currentUpperSelector).unbind($.domPrefixed('TransitionEnd'));
 				$(that.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)').css({'z-index':'1'});
@@ -311,7 +311,7 @@
 					setTimeout(function(){
 						$(that.upperLowerSelector).prefixedCSS('transition','none');
 					  $(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)').css({'z-index':'1'});
-					  $(that.currentLowerSelector).css({"z-index":"2"}).offset();
+					  // $(that.currentLowerSelector).css({"z-index":"2"}).offset();
 
 					 	var chNews = that.getNextNews();
 						that.upperAlreadyMoving = false;
@@ -334,7 +334,7 @@
 			var time = FlipBoard.getTime($(this.currentLowerSelector));
 			$(this.currentLowerSelector).prefixedCSS('transition','-webkit-transform '+time+'s linear');
 			$(this.currentLowerSelector).one($.domPrefixed("TransitionEnd"),function(){
-				console.log("here it is");
+				// console.log("here it is");
 				$(that.currentLowerSelector).prefixedCSS('transition','none');
 				$(that.currentLowerSelector).unbind($.domPrefixed('TransitionEnd'));
 				$(that.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+that.initialIncilination+'deg)').css({'z-index':'1'});
