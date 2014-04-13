@@ -295,6 +295,7 @@
 				
 				$(that.upperLowerSelector).prefixedCSS('transition','-webkit-transform .5s linear');
 				$(that.nextLowerSelector).html($(that.currentLowerSelector).html());
+				$(that.nextLowerSelector).css({"visibility":"hidden"})
 				$(that.lowerUpperSelector).html($(that.currentUpperSelector).html());	
 				$(that.upperLowerSelector).one($.domPrefixed("TransitionEnd"),function(){
 					// $(that.currentLowerSelector).html($(that.upperLowerSelector).html()).offset();
@@ -309,7 +310,7 @@
 						$(that.upperLowerSelector).prefixedCSS('transition','none');
 					  $(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)').css({'z-index':'1'});
 					  $(that.currentLowerSelector).css({"z-index":"2"}).offset();
-					  $(that.nextLowerSelector).css({"z-index":"1"}).offset();
+
 					 	var chNews = that.getNextNews();
 						that.upperAlreadyMoving = false;
 						that.dropInProgress = false;
