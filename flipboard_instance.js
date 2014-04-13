@@ -205,6 +205,7 @@
 			//alert("11");
 			if(speed > .5 && self.hasNextNews()){
 				// alert("cc");
+				$(self.nextLowerSelector).css({"visibility":"hidden"}).offset();
 				self.dropDownComplete('upper');
 				return
 			}
@@ -221,6 +222,7 @@
 			// alert("13");
 			console.log("speed>.....>>>>>>>>>>>>>..",speed);
 			//alert("ee");
+			$(self.nextLowerSelector).css({"visibility":"hidden"}).offset();
 			self.dropDownComplete('upper');
 		}else{
 			console.log("a");
@@ -295,7 +297,6 @@
 				
 				$(that.upperLowerSelector).prefixedCSS('transition','-webkit-transform .5s linear');
 				$(that.nextLowerSelector).html($(that.currentLowerSelector).html());
-				$(that.nextLowerSelector).css({"visibility":"hidden"})
 				$(that.lowerUpperSelector).html($(that.currentUpperSelector).html());	
 				$(that.upperLowerSelector).one($.domPrefixed("TransitionEnd"),function(){
 					// $(that.currentLowerSelector).html($(that.upperLowerSelector).html()).offset();
