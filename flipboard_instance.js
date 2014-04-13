@@ -321,9 +321,9 @@
 						$(that.upperLowerSelector).css({'z-index':'1'});
 						$(that.upperLowerSelector).prefixedCSS('transition','none');
 					  $(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)');
-					  setTimeout(function(){
+					  // setTimeout(function(){
 					  	$(that.currentLowerSelector).css({"z-index":"2"});
-					  },200);
+					  // },200);
 					 	var chNews = that.getNextNews();
 						that.upperAlreadyMoving = false;
 						that.dropInProgress = false;
@@ -369,9 +369,9 @@
 					setTimeout(function(){
 						$(that.lowerUpperSelector).prefixedCSS('transition','none');
 						$(that.lowerUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-90deg)').css({'z-index':'1'});
-						setTimeout(function(){
+						// setTimeout(function(){
 							$(that.currentUpperSelector).css({"z-index":"2"});
-						},200);
+						// },200);
 						that.lowerAlreadyMoving = false;
 						that.dropInProgress = false;
 						var chNews = that.getPrevNews();
