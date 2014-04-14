@@ -110,7 +110,7 @@
 			if( dy >= self.maxMoveOffset ){
 				//alert('1');
 				if(self.hasNextNews()){
-					$(self.nextUpperSelector).css({"display":"block"});
+					// $(self.nextUpperSelector).css({"display":"block"});
 					$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-89.999deg)');
 					// console.log('drop down reached');
 					self.dropDown = true;
@@ -124,7 +124,7 @@
 			}
 			else if( dy > self.minMoveOffset) {
 				self.upperAlreadyMoving = true;
-				$(self.nextUpperSelector).css({"display":"block"});
+				// $(self.nextUpperSelector).css({"display":"block"});
 				$(self.upperLowerSelector).css({'visibility':'hidden','z-index':'0'});
 				$(self.currentUpperSelector).prefixedCSS('transition','none');
 				if(self.hasNextNews()){
@@ -146,7 +146,7 @@
 			//console.log('dy..mmm......',dy,"maxMoveOffset........",self.maxMoveOffset);
 			var diffToRotate = self.initialIncilination + ( ( (90-self.initialIncilination) / self.maxMoveOffset) * dy );
 			if( dy >= self.maxMoveOffset ){
-				// $(self.nextLowerSelector).css({"display":"block"});
+				$(self.nextLowerSelector).css({"display":"block"});
 				//console.log("reached......................................................");
 				if(self.hasPrevNews()){
 					$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(-89.999deg)');
@@ -163,7 +163,7 @@
 			}else if( dy > self.minMoveOffset) {
 				// if()
 				// console.log("it is moved nnnnnnnnnnnnn", diffToRotate);
-				// $(self.nextLowerSelector).css({"display":"block"});
+				$(self.nextLowerSelector).css({"display":"block"});
 				self.lowerAlreadyMoving = true;
 				$(self.lowerUpperSelector).css({'visibility':'hidden'});
 				$(self.currentLowerSelector).prefixedCSS('transition','none');
