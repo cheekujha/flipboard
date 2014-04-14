@@ -7,7 +7,7 @@
 <name>FlipBoard</name>
 <preference name="orientation" value="portrait" />
 <icon src="flipboard_images/icon.jpg" width="128" height="128"/>
-<gap:splash src="flipboard_images/splash.jpg" />
+<gap:splash src="flipboard_images/splash.png" />
 <description>
 Flipboard Application
 </description>
