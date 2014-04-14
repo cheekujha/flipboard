@@ -146,7 +146,7 @@
 			//console.log('dy..mmm......',dy,"maxMoveOffset........",self.maxMoveOffset);
 			var diffToRotate = self.initialIncilination + ( ( (90-self.initialIncilination) / self.maxMoveOffset) * dy );
 			if( dy >= self.maxMoveOffset ){
-				$(self.nextLowerSelector).css({"display":"block"});
+				// $(self.nextLowerSelector).css({"display":"block"});
 				//console.log("reached......................................................");
 				if(self.hasPrevNews()){
 					$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(-89.999deg)');
@@ -163,7 +163,7 @@
 			}else if( dy > self.minMoveOffset) {
 				// if()
 				// console.log("it is moved nnnnnnnnnnnnn", diffToRotate);
-				$(self.nextLowerSelector).css({"display":"block"});
+				// $(self.nextLowerSelector).css({"display":"block"});
 				self.lowerAlreadyMoving = true;
 				$(self.lowerUpperSelector).css({'visibility':'hidden'});
 				$(self.currentLowerSelector).prefixedCSS('transition','none');
@@ -246,7 +246,7 @@
 			}
 			if(speed > .5 && self.hasPrevNews()){
 				// alert("c");
-				$(self.nextUpperSelector).css({"display":"none"});
+				// $(self.nextUpperSelector).css({"display":"none"});
 				self.dropDownComplete('lower');
 				return
 			}
@@ -259,7 +259,7 @@
 				return;
 			}
 			// alert("e");
-			$(self.nextUpperSelector).css({"display":"none"});
+			// $(self.nextUpperSelector).css({"display":"none"});
 			self.dropDownComplete('lower');
 		}
 	}
