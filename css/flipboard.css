@@ -4,8 +4,9 @@ body{
 	height: 100%;
 	background: black;
 }
-
-div {
+div{
+	/*background: lightblue;*/
+	background: url("../flipboard_images/background.jpg");
 	background-repeat: no-repeat;
 }
 
@@ -143,11 +144,6 @@ div {
 	border-bottom-left-radius: 20px;
 	border-bottom-right-radius: 20px;
 	/*padding: 5% 0;*/
-}
-
-div{
-	/*background: lightblue;*/
-	background: url("../flipboard_images/background.jpg");
 }
 
 .content-container{
