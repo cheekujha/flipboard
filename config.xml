@@ -4,7 +4,7 @@
     id        = "com.phonegap.example"
     version   = "1.0.0">
 
-<name>FlipBoard</name>
+<name>Rupal's</name>
 <preference name="orientation" value="portrait" />
 <icon src="flipboard_images/icon.jpg" width="128" height="128"/>
 <gap:splash src="flipboard_images/splash.png" />
