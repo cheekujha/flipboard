@@ -1,20 +1,20 @@
-(function(window){
+(function(window, $){
 	var supportTouch = 'createTouch' in document;
 
 	function FlipBoard(options){
 		this.minMoveOffset = options.minMoveOffset || 20;
 		this.maxMoveOffset = options.maxMoveOffset || 200;
 		this.dropDown = false;
-		this.upperSelector = options.upperSelector || '.upper-container-news-1';
-		this.upperSelector2 = options.upperSelector2 || '.upper-container-news-2';
-		this.lowerSelector = options.lowerSelector || '.lower-container-news-1';
-		this.lowerSelector2 = options.lowerSelector2 || '.lower-container-news-2';
-		this.upperLowerSelector = options.upperLowerSelector || '.upper-lower-container';
-		this.lowerUpperSelector = options.lowerUpperSelector || '.lower-upper-container';
-		this.currentUpperSelector = this.upperSelector;
-		this.nextUpperSelector = this.upperSelector2;
-		this.currentLowerSelector = this.lowerSelector;
-		this.nextLowerSelector = this.lowerSelector2;
+		this.us = options.upperSelector || '.upper-container-news-1';
+		this.us2 = options.upperSelector2 || '.upper-container-news-2';
+		this.ls = options.lowerSelector || '.lower-container-news-1';
+		this.ls2 = options.lowerSelector2 || '.lower-container-news-2';
+		this.uls = options.upperLowerSelector || '.upper-lower-container';
+		this.lus = options.lowerUpperSelector || '.lower-upper-container';
+		this.cus = this.us;
+		this.nus = this.us2;
+		this.cls = this.ls;
+		this.nls = this.ls2;
 		this.firstPoint= {};
 		this.prevPoint = {};
 		this.movePoint = {};
@@ -28,6 +28,8 @@
 		this.currentPointer = 0;
 		this.noNewsRotateOffset = options.noNewsRotateOffset || 75;
 		this.initialIncilination = options.initialIncilination || 0;
+		this.perspective = options.perspective || 2000;
+
 		var mainSelector = options.mainSelector || '.main-container';
 
 
@@ -39,6 +41,8 @@
 		// 	alert("touchcancel");
 		// 	console.log("touchcancel,,..should not come here");
 		// });
+
+		//Redirecting touchcancel to touchEnd --- this occurs in case of phonegap build
 		$('body').delegate(mainSelector,'touchcancel', {self : this} ,this.touchEnd);
 
 		$('body').delegate(mainSelector,FlipBoard.events.drag(), {self:this}, this.touchMove);
@@ -49,11 +53,11 @@
 	}
 
 	FlipBoard.prototype.initDisplay = function(){
-		$(this.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+this.initialIncilination+'deg)');
-		$(this.nextUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+this.initialIncilination+'deg)');
+		$(this.cus).prefixedCSS('transform',this.getTransform(-this.initialIncilination));
+		$(this.nus).prefixedCSS('transform',this.getTransform(-this.initialIncilination));
 
-		$(this.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+this.initialIncilination+'deg)');
-		$(this.nextLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+this.initialIncilination+'deg)');
+		$(this.cls).prefixedCSS('transform',this.getTransform(this.initialIncilination));
+		$(this.nls).prefixedCSS('transform',this.getTransform(this.initialIncilination));
 
 		this.insertNews("current",this.displayList[this.currentPointer]);
 		if(this.displayList[this.currentPointer+1]){
@@ -61,11 +65,13 @@
 		}
 	}
 
+	FlipBoard.prototype.getTransform = function(angle) {
+		return 'perspective('+this.perspective+'px) rotateX('+angle+'deg)';
+	}
+
 	FlipBoard.prototype.getNextNews = function(){
-		// console.log("before...........",this.currentPointer);
 		var nextNews = this.displayList[this.currentPointer + 2];
 		this.currentPointer++; 
-		// console.log("after...........",this.currentPointer);
 		return nextNews;
 	}
 
@@ -106,72 +112,61 @@
 				return
 			}
 			var diffToRotate = self.initialIncilination + (( (90-self.initialIncilination) / (self.maxMoveOffset) ) * dy);
-			// console.log('dy........',dy,"maxMoveOffset........",self.maxMoveOffset);
 			if( dy >= self.maxMoveOffset ){
-				//alert('1');
 				if(self.hasNextNews()){
 					// $(self.nextUpperSelector).css({"display":"block"});
-					$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-89.999deg)');
-					// console.log('drop down reached');
+					$(self.cus).prefixedCSS('transform',self.getTransform(-89.999));
 					self.dropDown = true;
 					var lowerDiffToRotate = 90 - (diffToRotate - 90);
-					// console.log('drop down reached',lowerDiffToRotate);
-					$(self.upperLowerSelector).prefixedCSS('transition','none').css({'visibility':'visible','z-index':'3'});
+					$(self.uls).prefixedCSS('transition','none').css({'visibility':'visible','z-index':'3'});
 					if(lowerDiffToRotate > self.initialIncilination){
-						$(self.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+lowerDiffToRotate+'deg)');
+						$(self.uls).prefixedCSS('transform',self.getTransform(lowerDiffToRotate));
 					}
 				}
 			}
 			else if( dy > self.minMoveOffset) {
 				self.upperAlreadyMoving = true;
 				// $(self.nextUpperSelector).css({"display":"block"});
-				$(self.upperLowerSelector).css({'visibility':'hidden','z-index':'0'});
-				$(self.currentUpperSelector).prefixedCSS('transition','none');
+				$(self.uls).css({'visibility':'hidden','z-index':'0'});
+				$(self.cus).prefixedCSS('transition','none');
 				if(self.hasNextNews()){
-					$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX('+-(diffToRotate-.001)+'deg)');
+					$(self.cus).prefixedCSS('transform',self.getTransform(-(diffToRotate-.001)));
 				}else{
 					if(diffToRotate < self.noNewsRotateOffset){
-						$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX('+-diffToRotate+'deg)');
+						$(self.cus).prefixedCSS('transform',self.getTransform(-diffToRotate));
 					}
 				}
 				
 			}
 		}else{
-			//console.log("move lower part up");
 			if(self.upperAlreadyMoving){
 				return
 			}
 			
 			dy = Math.abs(dy);
-			//console.log('dy..mmm......',dy,"maxMoveOffset........",self.maxMoveOffset);
 			var diffToRotate = self.initialIncilination + ( ( (90-self.initialIncilination) / self.maxMoveOffset) * dy );
 			if( dy >= self.maxMoveOffset ){
-				$(self.nextLowerSelector).css({"display":"block"});
-				//console.log("reached......................................................");
+				$(self.nls).css({"display":"block"});
 				if(self.hasPrevNews()){
-					$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(-89.999deg)');
+					$(self.cls).prefixedCSS('transform',self.getTransform(-89.999));
 					self.dropDown = true;
 					var upperDiffToRotate =(180 - diffToRotate);
-					// console.log('drop down reached>>>>>>>>>>>>>>>>',upperDiffToRotate);
-					// console.log('>>>>>>>>>>>>>>>>>>>.',lowerUpperSelector);
-					$(self.lowerUpperSelector).prefixedCSS('transition','none').css({'z-index':'2','visibility':'visible'});
+					$(self.lus).prefixedCSS('transition','none').css({'z-index':'2','visibility':'visible'});
 					if(-upperDiffToRotate < self.initialIncilination){
-						$(self.lowerUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX('+-upperDiffToRotate+'deg)');
-						$(self.lowerUpperSelector).css('z-index','3');
+						$(self.lus).prefixedCSS('transform',self.getTransform(-upperDiffToRotate));
+						$(self.lus).css('z-index','3');
 					}
 				}
 			}else if( dy > self.minMoveOffset) {
-				// if()
-				// console.log("it is moved nnnnnnnnnnnnn", diffToRotate);
-				$(self.nextLowerSelector).css({"display":"block"});
+				$(self.nls).css({"display":"block"});
 				self.lowerAlreadyMoving = true;
-				$(self.lowerUpperSelector).css({'visibility':'hidden'});
-				$(self.currentLowerSelector).prefixedCSS('transition','none');
+				$(self.lus).css({'visibility':'hidden'});
+				$(self.cls).prefixedCSS('transition','none');
 				if(self.hasPrevNews()){
-					$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+(diffToRotate-.001)+'deg)');
+					$(self.cls).prefixedCSS('transform',self.getTransform((diffToRotate-.001)));
 				}else{
 					if(diffToRotate < self.noNewsRotateOffset){
-						$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+diffToRotate+'deg)');
+						$(self.cls).prefixedCSS('transform',self.getTransform(diffToRotate));
 					}
 				}
 			}
@@ -179,7 +174,6 @@
 	}
 
 	FlipBoard.prototype.touchEnd = function(e){
-		// alert("touchEnd");
 		var self = e.data.self;
 		e.preventDefault();
 		self.touchStartHappened = false;
@@ -188,77 +182,64 @@
 		var finalPoint = $.extend(true, self.movePoint || self.firstPoint,{});
 		var speed = Math.abs((finalPoint.y - self.firstPoint.y) /(self.finalTime - self.initialTime));
 		var dy = (finalPoint.y - self.firstPoint.y);
-		console.log("touch end happened");
+		
 		self.movePoint = undefined;
 		if(dy > 0){
 			if(dy < self.minMoveOffset){
 				return
 			}
-			// alert("positive");
 			if(self.lowerAlreadyMoving) {
-				// alert("bb");
 				self.dropDown = false;
-				$(self.currentLowerSelector).prefixedCSS('transition','-webkit-transform .5s linear');
-				$(self.currentLowerSelector).one($.domPrefixed("TransitionEnd"), function(){
+				$(self.cls).prefixedCSS('transition','-webkit-transform .5s linear');
+				$(self.cls).one($.domPrefixed("TransitionEnd"), function(){
 					return
 				});
-				$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+self.initialIncilination+'deg)');
+				$(self.cls).prefixedCSS('transform',self.getTransform(self.initialIncilination));
 				self.lowerAlreadyMoving = false;
 				return;
 			}
-			//alert("11");
+
 			if(speed > .5 && self.hasNextNews()){
-				// alert("cc");
-				$(self.nextLowerSelector).css({"display":"none"});
+				$(self.nls).css({"display":"none"});
 				self.dropDownComplete('upper');
 				return
 			}
-			//alert("12");
+
 			if( dy < self.maxMoveOffset || !self.hasNextNews()) {
-				// alert("dd");
-				console.log("here>>>>>>>>>>>");
 				self.dropDown = false;
-				$(self.currentUpperSelector).prefixedCSS('transition','-webkit-transform .5s linear');
-				$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+self.initialIncilination+'deg)');
+				$(self.cus).prefixedCSS('transition','-webkit-transform .5s linear');
+				$(self.cus).prefixedCSS('transform',self.getTransform(-self.initialIncilination));
 				self.upperAlreadyMoving = false;
 				return;
 			}
-			// alert("13");
-			console.log("speed>.....>>>>>>>>>>>>>..",speed);
-			//alert("ee");
-			$(self.nextLowerSelector).css({"display":"none"});
+			
+			$(self.nls).css({"display":"none"});
 			self.dropDownComplete('upper');
-		}else{
-			console.log("a");
-			// alert("negative");
+		}else{			
 			dy = Math.abs(dy);
-			console.log(">>>>>>>>>>>>>>>>>>>",dy)
 			if(dy < self.minMoveOffset){
 				return
 			}
 			if(self.upperAlreadyMoving) {
-				// alert("b");
 				self.dropDown = false;
-				$(self.currentUpperSelector).prefixedCSS('transition','-webkit-transform .5s linear');
-				$(self.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+self.initialIncilination+'deg)');
+				$(self.cus).prefixedCSS('transition','-webkit-transform .5s linear');
+				$(self.cus).prefixedCSS('transform',self.getTransform(-self.initialIncilination));
 				self.upperAlreadyMoving = false;
 				return;
 			}
 			if(speed > .5 && self.hasPrevNews()){
-				// alert("c");
 				// $(self.nextUpperSelector).css({"display":"none"});
 				self.dropDownComplete('lower');
 				return
 			}
 			if( dy < self.maxMoveOffset || !self.hasPrevNews()) {
-				// alert("d");
 				self.dropDown = false;
-				$(self.currentLowerSelector).prefixedCSS('transition','-webkit-transform .5s linear');
-				$(self.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+self.initialIncilination+'deg)');
+				$(self.cls).prefixedCSS('transition','-webkit-transform .5s linear');
+				$(self.cls).prefixedCSS('transform',self.getTransform(self.initialIncilination));
 				self.lowerAlreadyMoving = false;
 				return;
 			}
-			// alert("e");
+			
 			// $(self.nextUpperSelector).css({"display":"none"});
 			self.dropDownComplete('lower');
 		}
@@ -280,7 +261,6 @@
 	}
 
 	FlipBoard.prototype.dropDownComplete = function(direction){
-		console.log("dropDownComplete");
 		this.dropDown = false;
 		var that = this;
 		if(that.dropInProgress) {
@@ -288,109 +268,105 @@
 		}
 		that.dropInProgress = true;
 		if(direction == 'upper' && that.hasNextNews()){
-			// alert("111");
-			$(that.upperLowerSelector).css({"z-index":"3"});
-			var time = FlipBoard.getTime($(this.currentUpperSelector));
-			$(this.currentUpperSelector).prefixedCSS('transition','-webkit-transform '+time+'s linear');
-			//alert("112");
-			$(this.currentUpperSelector).one($.domPrefixed("TransitionEnd"),function(){
-				// console.log("here");
-				$(that.currentUpperSelector).prefixedCSS('transition','none');
-				$(that.currentUpperSelector).unbind($.domPrefixed('TransitionEnd'));
-				$(that.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)').css({'z-index':'1'});
-				$(that.nextUpperSelector).css({'z-index':'2'});
-				$(that.upperLowerSelector).css({"visibility":"visible"}).offset();
+			$(that.uls).css({"z-index":"3"});
+			var time = FlipBoard.getTime($(this.cus));
+			$(this.cus).prefixedCSS('transition','-webkit-transform '+time+'s linear');
+			$(this.cus).one($.domPrefixed("TransitionEnd"),function(){
+				$(that.cus).prefixedCSS('transition','none');
+				$(that.cus).unbind($.domPrefixed('TransitionEnd'));
+				$(that.cus).prefixedCSS('transform',that.getTransform(-that.initialIncilination)).css({'z-index':'1'});
+				$(that.nus).css({'z-index':'2'});
+				$(that.uls).css({"visibility":"visible"}).offset();
 
-				$(that.upperLowerSelector).prefixedCSS('transition','-webkit-transform .5s linear');
-				$(that.nextLowerSelector).html($(that.currentLowerSelector).html());
-				$(that.lowerUpperSelector).html($(that.currentUpperSelector).html());	
-				$(that.upperLowerSelector).one($.domPrefixed("TransitionEnd"),function(){
-					// $(that.currentLowerSelector).html($(that.upperLowerSelector).html()).offset();
-					// alert($(that.upperLowerSelector).css('z-index'));
-					// alert($(that.currentLowerSelector).css('z-index'));
-					// alert($(that.nextLowerSelector).css('z-index'));
-					$(that.upperLowerSelector).prefixedCSS('transition','none');
-					$(that.upperLowerSelector).unbind($.domPrefixed('TransitionEnd'));
+				$(that.uls).prefixedCSS('transition','-webkit-transform .5s linear');
+				$(that.nls).html($(that.cls).html());
+				$(that.lus).html($(that.cus).html());	
+				$(that.uls).one($.domPrefixed("TransitionEnd"),function(){
+
+					$(that.uls).prefixedCSS('transition','none');
+					$(that.uls).unbind($.domPrefixed('TransitionEnd'));
 
 					//writing new hack
-					var temp1 = that.currentLowerSelector;
-					that.currentLowerSelector = that.upperLowerSelector;
-					that.upperLowerSelector = temp1;
+					var temp1 = that.cls;
+					that.cls = that.uls;
+					that.uls = temp1;
+
+					// swapVar(that.cls, that.uls);
 
 					//setTimeout(function(){
-						$(that.upperLowerSelector).css({'z-index':'1'});
-						$(that.upperLowerSelector).prefixedCSS('transition','none');
-					  $(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)');
+						$(that.uls).css({'z-index':'1'});
+						$(that.uls).prefixedCSS('transition','none');
+					  $(that.uls).prefixedCSS('transform',that.getTransform(90));
 					  setTimeout(function(){
-					  	$(that.currentLowerSelector).css({"z-index":"2"});
+					  	$(that.cls).css({"z-index":"2"});
 					  },100);
 					 	var chNews = that.getNextNews();
 						that.upperAlreadyMoving = false;
 						that.dropInProgress = false;
 						if(chNews){
-							that.lowerTemplateFunction($(that.upperLowerSelector), chNews.lower);
-							that.upperTemplateFunction($(that.currentUpperSelector),chNews.upper);
+							that.lowerTemplateFunction($(that.uls), chNews.lower);
+							that.upperTemplateFunction($(that.cus),chNews.upper);
 						}else{
-							$(that.currentUpperSelector).html("");
+							$(that.cus).html("");
 						}
-						var temp = that.currentUpperSelector;
-						that.currentUpperSelector = that.nextUpperSelector;
-						that.nextUpperSelector = temp;
+						var temp = that.cus;
+						that.cus = that.nus;
+						that.nus = temp;
+						// swapVar(that.cus, that.nus);
 					//},0);	
 				});			
-				$(that.upperLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(0deg)');
+				$(that.uls).prefixedCSS('transform',that.getTransform(0));
 			});
-			$(this.currentUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-90deg)');
+			$(this.cus).prefixedCSS('transform',that.getTransform(-90));
 		}else if(direction=="lower" && that.hasPrevNews()){
 			// $(that.lowerUpperSelector).css({'z-index':'3'});
-			var time = FlipBoard.getTime($(this.currentLowerSelector));
-			$(this.currentLowerSelector).prefixedCSS('transition','-webkit-transform '+time+'s linear');
-			$(this.currentLowerSelector).one($.domPrefixed("TransitionEnd"),function(){
-				// console.log("here it is");
-				$(that.currentLowerSelector).prefixedCSS('transition','none');
-				$(that.currentLowerSelector).unbind($.domPrefixed('TransitionEnd'));
-				$(that.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX('+that.initialIncilination+'deg)').css({'z-index':'1'});
-				$(that.nextLowerSelector).css({'z-index':'2'});
-				$(that.lowerUpperSelector).css({'visibility':'visible','z-index':'3'}).offset();
-				$(that.lowerUpperSelector).prefixedCSS('transition','-webkit-transform .5s linear');
-				$(that.nextUpperSelector).html($(that.currentUpperSelector).html());
-				$(that.upperLowerSelector).html($(that.currentLowerSelector).html());
+			var time = FlipBoard.getTime($(this.cls));
+			$(this.cls).prefixedCSS('transition','-webkit-transform '+time+'s linear');
+			$(this.cls).one($.domPrefixed("TransitionEnd"),function(){
 				
-				$(that.lowerUpperSelector).one($.domPrefixed('TransitionEnd'),function(){
-					console.log("coming here");
+				$(that.cls).prefixedCSS('transition','none');
+				$(that.cls).unbind($.domPrefixed('TransitionEnd'));
+				$(that.cls).prefixedCSS('transform',that.getTransform(that.initialIncilination)).css({'z-index':'1'});
+				$(that.nls).css({'z-index':'2'});
+				$(that.lus).css({'visibility':'visible','z-index':'3'}).offset();
+				$(that.lus).prefixedCSS('transition','-webkit-transform .5s linear');
+				$(that.nus).html($(that.cus).html());
+				$(that.uls).html($(that.cls).html());
+				
+				$(that.lus).one($.domPrefixed('TransitionEnd'),function(){
 					// $(that.currentUpperSelector).html($(that.lowerUpperSelector).html());
-					$(that.lowerUpperSelector).prefixedCSS('transition','none');
-					$(that.lowerUpperSelector).unbind('TransitionEnd');
+					$(that.lus).prefixedCSS('transition','none');
+					$(that.lus).unbind('TransitionEnd');
 
 					//writing new hack
-					var temp1 = that.currentUpperSelector;
-					that.currentUpperSelector = that.lowerUpperSelector;
-					that.lowerUpperSelector = temp1;
-
-					// setTimeout(function(){
-						$(that.lowerUpperSelector).css({'z-index':'1'});
-						$(that.lowerUpperSelector).prefixedCSS('transition','none');
-						$(that.lowerUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-90deg)').css({'z-index':'1'});
-						// setTimeout(function(){
-							$(that.currentUpperSelector).css({"z-index":"2"});
-						// },100);
+					var temp1 = that.cus;
+					that.cus = that.lus;
+					that.lus = temp1;
+						// swapVar(that.cus, that.lus);
+						$(that.lus).css({'z-index':'1'});
+						$(that.lus).prefixedCSS('transition','none');
+						$(that.lus).prefixedCSS('transform',that.getTransform(-90)).css({'z-index':'1'});
+						
+						$(that.cus).css({"z-index":"2"});
+						
 						that.lowerAlreadyMoving = false;
 						that.dropInProgress = false;
 						var chNews = that.getPrevNews();
 						if(chNews){
-							that.upperTemplateFunction($(that.lowerUpperSelector),chNews.upper);
-							that.lowerTemplateFunction($(that.currentLowerSelector),chNews.lower);
+							that.upperTemplateFunction($(that.lus),chNews.upper);
+							that.lowerTemplateFunction($(that.cls),chNews.lower);
 						}else{
-							$(that.currentLowerSelector).html("");
+							$(that.cls).html("");
 						}
-						var temp = that.currentLowerSelector;
-						that.currentLowerSelector = that.nextLowerSelector;
-						that.nextLowerSelector = temp;
-					// },100);
+						var temp = that.cls;
+						that.cls = that.nls;
+						that.nls = temp;
+						// swapVar(that.cls, that.nls);
+					
 				});
-				$(that.lowerUpperSelector).prefixedCSS('transform','perspective(2000px) rotateX(-'+that.initialIncilination+'deg)');
+				$(that.lus).prefixedCSS('transform',that.getTransform(-that.initialIncilination));
 			});
-			$(this.currentLowerSelector).prefixedCSS('transform','perspective(2000px) rotateX(90deg)');
+			$(this.cls).prefixedCSS('transform',this.getTransform(90));
 		}else{
 			that.dropInProgress = false;
 		}
@@ -400,16 +376,16 @@
 		switch (order)
 		{
 			case "current":
-				this.upperTemplateFunction($(this.currentUpperSelector),content.upper);
-				this.lowerTemplateFunction($(this.currentLowerSelector),content.lower);
+				this.upperTemplateFunction($(this.cus),content.upper);
+				this.lowerTemplateFunction($(this.cls),content.lower);
 				break;
 			case "next":
-				this.upperTemplateFunction($(this.nextUpperSelector),content.upper);
-				this.lowerTemplateFunction($(this.upperLowerSelector),content.lower);
+				this.upperTemplateFunction($(this.nus),content.upper);
+				this.lowerTemplateFunction($(this.uls),content.lower);
 				break
 			case "prev":
-				this.upperTemplateFunction($(this.nextLowerSelector),content.lower);
-				this.lowerTemplateFunction($(this.lowerUpperSelector),content.upper);
+				this.upperTemplateFunction($(this.nls),content.lower);
+				this.lowerTemplateFunction($(this.lus),content.upper);
 				break
 			default:
 				break;
@@ -453,23 +429,26 @@
 		var totalTime = .5;
 		var angleRemaining = 90 - Math.abs($.getRotateValue(currentTransform)[0]);
 		return (.5*angleRemaining)/90;
-			// console.log("current transform.",$.getRotateValue(currentTransform));
 	}
 
 	window.FlipBoard = FlipBoard;
-})(window);
 
-var Modernizr = {};
-Modernizr._prefixes = ["","-webkit-","-moz-","-ms-","-o-",""];
-Modernizr._domPrefixes= ["webkit", "moz", "o", "ms"];
-Modernizr.prefixed = function(property) {
-	// TODO: find a better solution (use original Modernizr function)
-	// used Webkit as it is used in webkit browsers
-	// also it is being used only for 'transform' in this file currenly
-	return 'Webkit' + property[0].toUpperCase() + property.slice(1);
-}
 
-$.fn.prefixedCSS = function(property, value) {
+
+	var Modernizr = {};
+	Modernizr._prefixes = ["","-webkit-","-moz-","-ms-","-o-",""];
+	Modernizr._domPrefixes= ["webkit", "moz", "o", "ms"];
+	Modernizr.prefixed = function(property) {
+		// TODO: find a better solution (use original Modernizr function)
+		// used Webkit as it is used in webkit browsers
+		// also it is being used only for 'transform' in this file currenly
+		return 'Webkit' + property[0].toUpperCase() + property.slice(1);
+	}
+
+	window.Modernizr = Modernizr;
+
+
+	$.fn.prefixedCSS = function(property, value) {
 	var cssValue;
 	var prefixedProperties = Modernizr._prefixes.map(function(prefix) {
 		return prefix + property;
@@ -525,4 +504,9 @@ $.extend({
 		return values;
 	}
 });
+
+
+})(window, $);
+
+
 
